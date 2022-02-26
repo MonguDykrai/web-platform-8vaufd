@@ -1,0 +1,54 @@
+/* #container {
+  background-color: #ccc;
+  width: 200px;
+  height: 200px;
+  position: relative;
+} */
+
+.line {
+  /* height: 1px; */
+  height: 2px;
+  /* background-color: rgb(221, 136, 25); */
+  /* background-color: #000; */
+  position: absolute;
+  transform-origin: top left;
+}
+
+.line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(249, 141, 35) 0,
+    rgb(249, 141, 35) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+/* 
+.link:active {
+  opacity: .2;
+  background: yellow;
+}
+
+.link:focus {
+  opcity: .3;
+  background: yellow;
+}
+
+.link:hover {
+  background: yellow;
+} */
+
+/*
+ * 起始位置加圆点
+ */
+/* .line::before {
+  content: ' ';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+} */

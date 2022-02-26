@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="addLine.css" />
+  </head>
+  <body>
+    <div id="container" class="clearfix">
+      <div>
+        <button id="buttonDrawRect">绘制矩形</button>
+        <button id="buttonStopDrawRect">结束绘制矩形</button>
+        <button id="buttonCalibrate">开始标定</button>
+        <button id="buttonStopCalibrate">结束标定</button>
+      </div>
+      <!-- <div id="line1"></div> -->
+      <div id="combination">
+        <canvas id="canvas"></canvas>
+        <div id="form">
+          <div>纵向：<input type="text" /></div>
+          <div>双向车道数：<input type="text" /></div>
+          <div>隔离带宽度：<input type="text" /></div>
+        </div>
+      </div>
+      <div id="holograph">
+        <div id="car1" class="car"></div>
+        <div id="car2" class="car"></div>
+      </div>
+    </div>
+    <!-- <button id="button">连线回显</button>
+    <button id="clear">清除连线</button>
+    <span id="position">坐标：</span> -->
+    <script src="script.js"></script>
+    <!-- <script src="./addLine.js"></script> -->
+
+    <!-- <script>
+      const container = document.getElementById('container');
+      const rect = container.getBoundingClientRect();
+      const point1 = []; // 0: x 值 1: y 值
+      const point2 = []; // 同上
+      container.addEventListener('click', (e) => {
+        // console.log(e);
+        // console.log(e.layerX, e.layerY);
+        // console.log(e.offsetX, e.offsetY);
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/MouseEvent/pageX
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/MouseEvent/pageY
+        // console.log(e.pageX, e.pageY);
+        const pointX = e.pageX - rect.left;
+        const pointY = e.pageY - rect.top;
+        console.log({
+          pointX,
+          pointY,
+        });
+        const printPosition = document.getElementById('position');
+        printPosition.textContent = `坐标：x: ${pointX} --- y: ${pointY}`;
+
+        if (point1.length === 0) {
+          // 选择起始 point
+          point1.push(pointX, pointY);
+        } else if (point1.length === 2 && point2.length === 0) {
+          // 选择结束 point
+          point2.push(pointX, pointY);
+        }
+
+        if (point1.length === 2 && point2.length === 2) {
+          // 获取两个 point 的坐标
+          const [x1, x2, y1, y2] = [...point1, ...point2];
+          // draw line
+          addLine('container', x1, x2, y1, y2);
+          localStorage.setItem('point', [x1, x2, y1, y2]);
+          point1.splice(0);
+          point2.splice(0);
+        }
+
+        console.log(
+          {
+            point1,
+            point2,
+          },
+          '------'
+        );
+      });
+    </script>
+    <script>
+      const restore = document.getElementById('button');
+      restore.addEventListener('click', (e) => {
+        console.log('button clicked');
+        if (localStorage.getItem('point')) {
+          const point = localStorage.getItem('point');
+          const points = point.split(',');
+          const [x1, y1, x2, y2] = points;
+          addLine('container', x1, y1, x2, y2);
+        }
+      });
+
+      const clear = document.getElementById('clear');
+      clear.addEventListener('click', (e) => {
+        localStorage.removeItem('point');
+      });
+    </script> -->
+
+    <script>
+      // 开始标定
+      const buttonCalibrate = document.getElementById('buttonCalibrate');
+      buttonCalibrate.addEventListener('click', (e) => {
+        console.log('buttonCalibrate');
+        canvas.drawLine();
+      });
+
+      const buttonStopCalibrate = document.getElementById(
+        'buttonStopCalibrate'
+      );
+      buttonStopCalibrate.addEventListener('click', (e) => {
+        console.log('buttonStopCalibrate');
+        canvas.stopDrawLine();
+      });
+    </script>
+
+    <script>
+      const buttonDrawRect = document.getElementById('buttonDrawRect');
+      buttonDrawRect.addEventListener('click', (e) => {
+        console.log('buttonDrawRect');
+        canvas.drawRect();
+      });
+
+      const buttonStopDrawRect = document.getElementById('buttonStopDrawRect');
+      buttonStopDrawRect.addEventListener('click', (e) => {
+        console.log('buttonStopDrawRect');
+        canvas.stopDrawRect();
+      });
+    </script>
+  </body>
+</html>

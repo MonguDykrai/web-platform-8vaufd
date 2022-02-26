@@ -126,8 +126,18 @@ class Canvas {
 
   drawRectClickEventHandler(e) {
     this.printDrawRectClickEventHandlerPoint(e);
-    console.log(e);
-    console.log(e.layerX, e.layerY);
+    // console.log(e);
+    // console.log(e.layerX, e.layerY);
+    // console.log(Circle);
+    const circle = new Circle({
+      xpoint: e.layerX,
+      ypoint: e.layerY,
+      radius: 5,
+      color: 'blue',
+      context: this.context,
+    });
+    // console.log(circle);
+    circle.draw();
   }
 
   // 绘制矩形

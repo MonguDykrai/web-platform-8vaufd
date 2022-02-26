@@ -11,6 +11,14 @@ class Rectangle {
     this.uuid = Date.now() + `${parseInt(Math.random() * 10000000)}`;
   }
 
+  // 更新参数，复用 rectangle 实例
+  setParams(xpoint, ypoint, width, height) {
+    this.xpoint = xpoint;
+    this.ypoint = ypoint;
+    this.width = width;
+    this.height = height;
+  }
+
   draw(color = '') {
     // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/isPointInPath
     // https://www.rgraph.net/blog/path-objects.html
@@ -70,6 +78,7 @@ class Canvas {
     this.eles = [];
     this.target = null; // 事件对象
     this.circle = null; // drawRect step1 的 circle 实例
+    this.currentDrawingRect = null; // drawRect step2 的 rectangle 实例
   }
 
   /**
@@ -163,7 +172,7 @@ class Canvas {
     this.canvas.addEventListener('mousemove', (e) => {
       if (this.circle) {
         this.clearCanvas(); // 清空整张画布
-        this.circle.draw(); // 重新把实心圆画上
+        this.circle.draw(); // 重新把实心圆画上（放到画完 rectangle 后面的话，实心圆位于矩形上方）
         const x1 = this.circle.xpoint;
         const y1 = this.circle.ypoint;
         const x2 = e.layerX;
@@ -194,15 +203,23 @@ class Canvas {
           // y1 比 y2 的值小则 height 为 y2 - y1 的值
           height = y2 - y1;
         }
-        const currentDrawingRect = new Rectangle(
-          pointX,
-          pointY,
-          width,
-          height,
-          'red',
-          this.context
-        );
-        currentDrawingRect.draw(); // 会画出一个实心的矩形，需要做处理，每次画时先清除先前画的
+        // ************************ 绘制矩形 **********************************
+        {
+          if (this.currentDrawingRect) {
+            this.currentDrawingRect.setParams(pointX, pointY, width, height);
+          } else {
+            this.currentDrawingRect = new Rectangle(
+              pointX,
+              pointY,
+              width,
+              height,
+              'red',
+              this.context
+            );
+          }
+          this.currentDrawingRect.draw(); // 会画出一个实心的矩形，需要做处理，每次画时先清除先前画的
+        }
+        // ************************ 绘制矩形 **********************************
       }
     });
   }

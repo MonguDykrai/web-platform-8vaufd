@@ -8,7 +8,7 @@ class Circle {
   }
 
   draw() {
-    console.log(this.context, 433);
+    // console.log(this.context, 433);
     this.context.beginPath();
     this.context.arc(
       this.xpoint,

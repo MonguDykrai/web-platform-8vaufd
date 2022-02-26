@@ -152,22 +152,93 @@ class Canvas {
     }
   }
 
-  // drawRect 事件句柄
+  // drawRect mousemove 事件句柄
+  drawRectMousemoveEventHandler(e) {
+    if (this.circle) {
+      this.addClassnameGrab();
+      this.clearCanvas(); // 清空整张画布
+      this.circle.draw(); // 重新把实心圆画上（放到画完 rectangle 后面的话，实心圆位于矩形上方）
+      const x1 = this.circle.xpoint;
+      const y1 = this.circle.ypoint;
+      const x2 = e.layerX;
+      const y2 = e.layerY;
+      let pointX = -1;
+      let pointY = -1;
+      let width = -1;
+      let height = -1;
+      if (x2 < x1) {
+        // x2 比 x1 的值小则 pointX 的值应该取 x2 的
+        pointX = x2;
+        // x2 比 x2 的值小则 width 为 x1 - x2 的值
+        width = x1 - x2;
+      } else if (x1 < x2) {
+        // x1 比 x2 的值小则 pointX 的值应该取 x1 的
+        pointX = x1;
+        // x1 比 x2 的值小则 width 为 x2 - x1 的值
+        width = x2 - x1;
+      }
+      if (y2 < y1) {
+        // y2 比 y1 的值小则 pointY 的值应该取 y2 的
+        pointY = y2;
+        // y2 比 y1 的值小则 height 为 y1 - y2 的值
+        height = y1 - y2;
+      } else if (y1 < y2) {
+        // y1 比 y2 的值小则 pointY 的值应该取 y1 的
+        pointY = y1;
+        // y1 比 y2 的值小则 height 为 y2 - y1 的值
+        height = y2 - y1;
+      }
+      // ************************ 绘制矩形 **********************************
+      {
+        if (this.currentDrawingRect) {
+          this.currentDrawingRect.setParams(pointX, pointY, width, height);
+        } else {
+          this.currentDrawingRect = new Rectangle(
+            pointX,
+            pointY,
+            width,
+            height,
+            'red',
+            this.context
+          );
+        }
+        this.currentDrawingRect.draw(); // 会画出一个实心的矩形，需要做处理，每次画时先清除先前画的
+      }
+      // ************************ 绘制矩形 **********************************
+    }
+  }
+
+  // drawRect click 事件句柄
   drawRectClickEventHandler(e) {
-    this.printDrawRectClickEventHandlerPoint(e);
-    // console.log(e);
-    // console.log(e.layerX, e.layerY);
-    // console.log(Circle);
-    const circle = new Circle({
-      xpoint: e.layerX,
-      ypoint: e.layerY,
-      radius: 5,
-      color: 'blue',
-      context: this.context,
-    });
-    this.circle = circle; // 缓存 circle 实例
-    // console.log(circle);
-    circle.draw();
+    if (this.circle) {
+      // 结束绘制矩形
+      console.log(57777);
+      this.eles.push(this.currentDrawingRect); // 将已经完成绘制的矩形添加到矩形列表中
+      this.currentDrawingRect = null; // 将绘制矩形期间缓存的临时 rectangle 实例的指向销毁
+      this.circle = null; // 将绘制矩形期间缓存的临时 circle 实例的指向销毁
+      // 移除 drawRect mousemove 事件
+      this.canvas.removeEventListener(
+        'mousemove',
+        this.drawRectMousemoveEventHandler
+      );
+      // 移除 drawRect click 事件
+      this.canvas.removeEventListener('click', this.drawRectClickEventHandler);
+    } else {
+      this.printDrawRectClickEventHandlerPoint(e);
+      // console.log(e);
+      // console.log(e.layerX, e.layerY);
+      // console.log(Circle);
+      const circle = new Circle({
+        xpoint: e.layerX,
+        ypoint: e.layerY,
+        radius: 5,
+        color: 'blue',
+        context: this.context,
+      });
+      this.circle = circle; // 缓存 circle 实例
+      // console.log(circle);
+      circle.draw();
+    }
   }
 
   /**
@@ -187,60 +258,10 @@ class Canvas {
       this.drawRectClickEventHandler.bind(this)
     );
 
-    this.canvas.addEventListener('mousemove', (e) => {
-      if (this.circle) {
-        this.addClassnameGrab();
-        this.clearCanvas(); // 清空整张画布
-        this.circle.draw(); // 重新把实心圆画上（放到画完 rectangle 后面的话，实心圆位于矩形上方）
-        const x1 = this.circle.xpoint;
-        const y1 = this.circle.ypoint;
-        const x2 = e.layerX;
-        const y2 = e.layerY;
-        let pointX = -1;
-        let pointY = -1;
-        let width = -1;
-        let height = -1;
-        if (x2 < x1) {
-          // x2 比 x1 的值小则 pointX 的值应该取 x2 的
-          pointX = x2;
-          // x2 比 x2 的值小则 width 为 x1 - x2 的值
-          width = x1 - x2;
-        } else if (x1 < x2) {
-          // x1 比 x2 的值小则 pointX 的值应该取 x1 的
-          pointX = x1;
-          // x1 比 x2 的值小则 width 为 x2 - x1 的值
-          width = x2 - x1;
-        }
-        if (y2 < y1) {
-          // y2 比 y1 的值小则 pointY 的值应该取 y2 的
-          pointY = y2;
-          // y2 比 y1 的值小则 height 为 y1 - y2 的值
-          height = y1 - y2;
-        } else if (y1 < y2) {
-          // y1 比 y2 的值小则 pointY 的值应该取 y1 的
-          pointY = y1;
-          // y1 比 y2 的值小则 height 为 y2 - y1 的值
-          height = y2 - y1;
-        }
-        // ************************ 绘制矩形 **********************************
-        {
-          if (this.currentDrawingRect) {
-            this.currentDrawingRect.setParams(pointX, pointY, width, height);
-          } else {
-            this.currentDrawingRect = new Rectangle(
-              pointX,
-              pointY,
-              width,
-              height,
-              'red',
-              this.context
-            );
-          }
-          this.currentDrawingRect.draw(); // 会画出一个实心的矩形，需要做处理，每次画时先清除先前画的
-        }
-        // ************************ 绘制矩形 **********************************
-      }
-    });
+    this.canvas.addEventListener(
+      'mousemove',
+      this.drawRectMousemoveEventHandler.bind(this)
+    );
   }
 
   // 结束绘制矩形

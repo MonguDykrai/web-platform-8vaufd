@@ -111,10 +111,34 @@ class Canvas {
     }
   }
 
+  // 打印绘制矩形的 x, y
+  printDrawRectClickEventHandlerPoint(e) {
+    if (document.getElementById('layerInfoId')) {
+      const div = document.getElementById('layerInfoId');
+      div.textContent = `layerX: ${e.layerX}, layerY: ${e.layerY}`;
+    } else {
+      const div = document.createElement('div');
+      div.id = 'layerInfoId';
+      div.textContent = `layerX: ${e.layerX}, layerY: ${e.layerY}`;
+      document.body.appendChild(div);
+    }
+  }
+
+  drawRectClickEventHandler(e) {
+    this.printDrawRectClickEventHandlerPoint(e);
+    console.log(e);
+    console.log(e.layerX, e.layerY);
+  }
+
   // 绘制矩形
   drawRect() {
     console.log('drawRect');
     this.addClassnameCrosshair();
+
+    this.canvas.addEventListener(
+      'click',
+      this.drawRectClickEventHandler.bind(this)
+    );
   }
 
   // 结束绘制矩形
@@ -134,6 +158,7 @@ class Canvas {
     this.removeClassnameCrosshair('line');
   }
 
+  // 具体绘制矩形的函数
   addRect({ x, y, width, height, color }) {
     const rect = new Rectangle(x, y, width, height, color, this.context);
     this.eles.push(rect);

@@ -69,6 +69,7 @@ class Canvas {
     // this.addClickEventListener();
     this.eles = [];
     this.target = null; // 事件对象
+    this.circle = null; // drawRect step1 的 circle 实例
   }
 
   /**
@@ -124,6 +125,7 @@ class Canvas {
     }
   }
 
+  // drawRect 事件句柄
   drawRectClickEventHandler(e) {
     this.printDrawRectClickEventHandlerPoint(e);
     // console.log(e);
@@ -136,6 +138,7 @@ class Canvas {
       color: 'blue',
       context: this.context,
     });
+    this.circle = circle; // 缓存 circle 实例
     // console.log(circle);
     circle.draw();
   }
@@ -149,6 +152,50 @@ class Canvas {
       'click',
       this.drawRectClickEventHandler.bind(this)
     );
+
+    this.canvas.addEventListener('mousemove', (e) => {
+      if (this.circle) {
+        const x1 = this.circle.xpoint;
+        const y1 = this.circle.ypoint;
+        const x2 = e.layerX;
+        const y2 = e.layerY;
+        let pointX = -1;
+        let pointY = -1;
+        let width = -1;
+        let height = -1;
+        if (x2 < x1) {
+          // x2 比 x1 的值小则 pointX 的值应该取 x2 的
+          pointX = x2;
+          // x2 比 x2 的值小则 width 为 x1 - x2 的值
+          width = x1 - x2;
+        } else if (x1 < x2) {
+          // x1 比 x2 的值小则 pointX 的值应该取 x1 的
+          pointX = x1;
+          // x1 比 x2 的值小则 width 为 x2 - x1 的值
+          width = x2 - x1;
+        }
+        if (y2 < y1) {
+          // y2 比 y1 的值小则 pointY 的值应该取 y2 的
+          pointY = y2;
+          // y2 比 y1 的值小则 height 为 y1 - y2 的值
+          height = y1 - y2;
+        } else if (y1 < y2) {
+          // y1 比 y2 的值小则 pointY 的值应该取 y1 的
+          pointY = y1;
+          // y1 比 y2 的值小则 height 为 y2 - y1 的值
+          height = y2 - y1;
+        }
+        const currentDrawingRect = new Rectangle(
+          pointX,
+          pointY,
+          width,
+          height,
+          'red',
+          this.context
+        );
+        currentDrawingRect.draw(); // 会画出一个实心的矩形，需要做处理，每次画时先清除先前画的
+      }
+    });
   }
 
   // 结束绘制矩形

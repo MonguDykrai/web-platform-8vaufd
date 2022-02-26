@@ -19,9 +19,9 @@ class Rectangle {
     this.path2DInstance.rect(this.xpoint, this.ypoint, this.width, this.height);
     this.context.strokeStyle = 'red'; // 路径颜色
     this.context.lineWidth = 3; // 路径宽度
-    this.context.fillStyle = color || this.color; // 填充的颜色
+    // this.context.fillStyle = color || this.color; // 填充的颜色
     this.context.stroke(this.path2DInstance); // 绘制路径
-    this.context.fill(this.path2DInstance); // 填色
+    // this.context.fill(this.path2DInstance); // 填色
   }
 
   /**
@@ -143,6 +143,13 @@ class Canvas {
     circle.draw();
   }
 
+  /**
+   * 清空画布
+   */
+  clearCanvas() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   // 绘制矩形
   drawRect() {
     console.log('drawRect');
@@ -155,6 +162,8 @@ class Canvas {
 
     this.canvas.addEventListener('mousemove', (e) => {
       if (this.circle) {
+        this.clearCanvas(); // 清空整张画布
+        this.circle.draw(); // 重新把实心圆画上
         const x1 = this.circle.xpoint;
         const y1 = this.circle.ypoint;
         const x2 = e.layerX;
@@ -263,26 +272,26 @@ const canvas = new Canvas({
   height: 350,
 });
 
-canvas.addRect({
-  x: 100,
-  y: 100,
-  width: 40,
-  height: 60,
-  color: 'orange',
-});
+// canvas.addRect({
+//   x: 100,
+//   y: 100,
+//   width: 40,
+//   height: 60,
+//   color: 'orange',
+// });
 
-canvas.addRect({
-  x: 120,
-  y: 120,
-  width: 40,
-  height: 60,
-  color: 'purple',
-});
+// canvas.addRect({
+//   x: 120,
+//   y: 120,
+//   width: 40,
+//   height: 60,
+//   color: 'purple',
+// });
 
-canvas.addRect({
-  x: 90,
-  y: 90,
-  width: 40,
-  height: 60,
-  color: 'ivory',
-});
+// canvas.addRect({
+//   x: 90,
+//   y: 90,
+//   width: 40,
+//   height: 60,
+//   color: 'ivory',
+// });

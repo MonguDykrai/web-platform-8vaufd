@@ -67,3 +67,7 @@
 .cursor-crosshair {
   cursor: crosshair;
 }
+
+.cursor-grab {
+  cursor: grab;
+}

@@ -82,6 +82,24 @@ class Canvas {
   }
 
   /**
+   * mousemove绘制矩形期间 cursor 样式改为 grab
+   */
+  addClassnameGrab() {
+    if (!this.canvas.classList.contains('cursor-grab')) {
+      this.canvas.classList.add('cursor-grab');
+    }
+  }
+
+  /**
+   * mousemove绘制矩形结束后 cursor grab 样式移除
+   */
+  removeClassnameGrab() {
+    if (this.canvas.classList.contains('cursor-grab')) {
+      this.canvas.classList.remove('cursor-grab');
+    }
+  }
+
+  /**
    * rect | line
    */
   addClassnameCrosshair(mode = 'rect') {
@@ -171,6 +189,7 @@ class Canvas {
 
     this.canvas.addEventListener('mousemove', (e) => {
       if (this.circle) {
+        this.addClassnameGrab();
         this.clearCanvas(); // 清空整张画布
         this.circle.draw(); // 重新把实心圆画上（放到画完 rectangle 后面的话，实心圆位于矩形上方）
         const x1 = this.circle.xpoint;
